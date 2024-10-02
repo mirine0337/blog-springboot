@@ -63,4 +63,5 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found 반환
         }
     }
+
 }

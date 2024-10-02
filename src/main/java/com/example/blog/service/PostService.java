@@ -57,4 +57,5 @@ public class PostService {
             return false; // 게시글이 존재하지 않으면 false 반환
         }
     }
+
 }

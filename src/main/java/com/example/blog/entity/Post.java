@@ -1,64 +1,92 @@
 package com.example.blog.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
 
-@Getter
 @Entity
-@Table(name = "posts")  // 실제 데이터베이스의 posts 테이블과 매핑
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    // imageUrl 필드의 getter와 setter 추가
-    @Column
-    private String imageUrl;  // 이미지 URL 필드 추가
+    private Long userId;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(nullable = true)  // 이미지는 선택적일 수 있으므로 nullable 허용
+    private String imageUrl;
+
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     // 기본 생성자
-    public Post() {
+    public Post() {}
+
+    // PrePersist로 저장하기 전에 createdAt, updatedAt 필드를 자동으로 설정
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
-    // getter 및 setter 메서드들
+    // PreUpdate로 업데이트할 때 updatedAt 필드를 자동으로 설정
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // Getter 및 Setter
+    public Long getId() {
+        return id;
+    }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
+    public String getContent() {
+        return content;
+    }
+
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
-
-    // 다른 필요에 따라 추가적인 메서드를 추가할 수 있습니다.
 }
