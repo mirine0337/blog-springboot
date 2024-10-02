@@ -2,6 +2,7 @@ package com.example.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -93,4 +94,14 @@ public class Post {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
+    @Setter
+    @Column(name = "likes", nullable = false)
+    private int likes = 0;
+
+    // Getter, Setter 추가
+    public int getLikes() {
+        return likes;
+    }
+
 }

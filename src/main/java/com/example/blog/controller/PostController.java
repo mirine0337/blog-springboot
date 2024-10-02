@@ -1,6 +1,8 @@
 package com.example.blog.controller;
 
 import com.example.blog.entity.Post;
+import com.example.blog.exception.ResourceNotFoundException;
+import com.example.blog.repository.PostRepository;
 import com.example.blog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,11 +10,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts")
 @CrossOrigin(origins = "http://localhost:3000") // React 앱의 Origin 허용
 public class PostController {
+
+    private final PostRepository postRepository;
+
+    // 생성자를 통해 PostRepository 주입
+    public PostController(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
     @Autowired
     private PostService postService;
@@ -62,6 +72,20 @@ public class PostController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found 반환
         }
+    }
+
+    @PostMapping("/{id}/like")
+    public ResponseEntity<?> updateLikes(@PathVariable Long id, @RequestBody Map<String, Boolean> liked) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+
+        if (liked.get("liked")) {
+            post.setLikes(post.getLikes() + 1);
+        } else {
+            post.setLikes(post.getLikes() - 1);
+        }
+
+        postRepository.save(post);
+        return ResponseEntity.ok().build();
     }
 
 }
