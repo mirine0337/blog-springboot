@@ -19,7 +19,9 @@ public class Post {
 
     private String content;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.EAGER)  // 지연 로딩 방식으로 User 엔티티와 연관관계 설정
+    @JoinColumn(name = "user_id", nullable = false)  // 외래 키
+    private User user;  // User 엔티티와의 연관 관계
 
     @Column(nullable = true)  // 이미지는 선택적일 수 있으므로 nullable 허용
     private String imageUrl;
@@ -71,12 +73,12 @@ public class Post {
         this.content = content;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;  // User 엔티티와의 연관 관계에 접근
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getImageUrl() {
@@ -104,4 +106,7 @@ public class Post {
         return likes;
     }
 
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
 }
