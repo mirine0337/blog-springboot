@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -47,6 +48,9 @@ public class Post {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Notification> notifications; // cascade로 notification테이블 삭제필요시 같이 삭제함.
 
     // Getter 및 Setter
     public Long getId() {

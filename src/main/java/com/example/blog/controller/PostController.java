@@ -62,14 +62,15 @@ public class PostController {
         }
     }
 
-    // 글 삭제 API
+    // 게시글 삭제 API
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         boolean isDeleted = postService.deletePost(id);
+
         if (isDeleted) {
-            return ResponseEntity.noContent().build(); // 204 No Content 반환
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found 반환
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
         }
     }
 
