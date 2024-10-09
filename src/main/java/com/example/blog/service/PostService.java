@@ -1,7 +1,9 @@
 package com.example.blog.service;
 
 import com.example.blog.entity.Post;
+import com.example.blog.entity.User;
 import com.example.blog.repository.PostRepository;
+import com.example.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private UserRepository userRepository;  // UserRepository 주입
+
     // 모든 게시글 조회
     public List<Post> getAllPosts() {
         return postRepository.findAll();
@@ -25,8 +30,16 @@ public class PostService {
         return post.orElse(null); // 게시글이 존재하지 않으면 null 반환
     }
 
-    // 게시글 작성
-    public Post createPost(Post post) {
+    // 게시글 작성 (userId를 받아서 User를 설정)
+    public Post createPost(Post post, Long userId) {
+        // userId로 User 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        // Post 엔티티의 user 필드 설정
+        post.setUser(user);
+
+        // 저장
         return postRepository.save(post);
     }
 

@@ -27,8 +27,9 @@ public class PostController {
 
     // 글 작성 API
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        Post createdPost = postService.createPost(post);
+    public ResponseEntity<Post> createPost(@RequestBody Post post, @RequestParam Long userId) {
+        // userId를 함께 전달하여 createPost 호출
+        Post createdPost = postService.createPost(post, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPost); // 201 Created 반환
     }
 
